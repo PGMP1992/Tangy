@@ -1,0 +1,105 @@
+﻿@page "/category/create"
+@page "/category/update/{id:int}"
+@using Tangy_DataAccess.Data
+@inject ICategoryRepos _categoryRepository
+@inject NavigationManager _navigationManager
+@* @inject IJSRuntime _JS *@
+
+@if (IsProcessing)
+{
+    <div class="position-absolute w-75 h-75 d-flex flex-column align-items-center bg-white justify-content-center">
+        <img src="/images/loading.gif" alt="loading" />
+    </div>
+}
+else
+{
+    <div class="card border-1 m-4">
+        <div class="card-header bg-black bg-gradient ml-0 py-3">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="text-white py-2">@(Id == 0 ? "Create" : "Update") Category</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <EditForm Model="Category" FormName="CategoryUpsertForm" OnValidSubmit="UpsertCategory">
+                <DataAnnotationsValidator />
+
+                <div class="border-0 p-1 mt-2">
+                    <div class="form-floating py-3 col-12">
+                        <InputText @bind-Value="Category.Name" class="form-control" id="Name" placeholder="Name" />
+                        <label for="Name">Name</label>
+                        <ValidationMessage For="@(() => Category.Name)" />
+                    </div>
+
+                    @* Buttons ------------------ *@
+                    <hr />
+                    <div class="d-flex">
+                        <div class="row">
+                            <div class="btn-group " role="group">
+                                <button type="submit" class="btn btn-primary mx-1" disabled="@IsProcessing">
+                                    <i class="bi bi-floppy2-fill"></i>
+                                    @(Id == 0 ? "Create" : "Update")
+                                </button>
+                                <a href="category" class="btn btn-outline-primary mx-1" disabled="@IsProcessing">
+                                    <i class="bi bi-arrow-bar-left"></i> Back
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </EditForm>
+
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private CategoryDTO Category { get; set; } = new CategoryDTO();
+
+    private bool IsProcessing { get; set; } = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await LoadCategory();
+            IsProcessing = false;
+            StateHasChanged();
+        }
+        //return base.OnAfterRenderAsync(firstRender);
+    }
+
+    private async Task LoadCategory()
+    {
+        if (Id > 0)
+        {
+            Category = _categoryRepository.Get(Id);
+        }
+    }
+
+    private async Task UpsertCategory()
+    {
+        IsProcessing = true;
+        if (Category.Id == 0)
+        {
+            //create
+            _categoryRepository.Create(Category);
+            //await _JS.ToastrSuccess("Category Created Successfully");
+        }
+        else
+        {
+            //update
+            _categoryRepository.Update(Category);
+            //await _JS.ToastrSuccess("Category Updated Successfully");
+        }
+        IsProcessing = false;
+        _navigationManager.NavigateTo("category");
+    }
+}

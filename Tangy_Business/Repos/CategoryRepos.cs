@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Tangy_Business.Repos.IRepos;
-using Tangy_DataAccess;
 using Tangy_DataAccess.Data;
 using Tangy_Models;
 
@@ -31,7 +30,7 @@ namespace Tangy_Business.Repos
         public int Delete(int id)
         {
             var obj = _db.Categories.FirstOrDefault(x => x.Id == id);
-            if(obj != null)
+            if (obj != null)
             {
                 _db.Categories.Remove(obj);
                 return _db.SaveChanges();
