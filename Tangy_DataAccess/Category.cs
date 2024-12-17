@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Tangy_DataAccess.Data
+namespace Tangy_DataAccess
 {
     public class Category
     {

@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Tangy_DataAccess\Tangy_DataAccess.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 </Project>
