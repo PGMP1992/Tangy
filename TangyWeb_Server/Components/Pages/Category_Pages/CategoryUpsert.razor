@@ -75,7 +75,7 @@ else
     {
         if (Id > 0)
         {
-            Category = _categoryRepository.Get(Id);
+            Category = await _categoryRepository.Get(Id);
         }
     }
 
@@ -84,13 +84,13 @@ else
         IsProcessing = true;
         if (Category.Id == 0) //create
         {
-            _categoryRepository.Create(Category);
-            //await _JS.ToastrSuccess("Category Created Successfully");
+            await _categoryRepository.Create(Category);
+            await _JS.ToastrSuccess("Category Created");
         }
         else //update
         {
-            _categoryRepository.Update(Category);
-            //await _JS.ToastrSuccess("Category Updated Successfully");
+            await _categoryRepository.Update(Category);
+            await _JS.ToastrSuccess("Category Updated");
         }
         IsProcessing = false;
         _navigationManager.NavigateTo("category");

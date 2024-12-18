@@ -1,6 +1,6 @@
 ﻿@page "/category"
 @inject ICategoryRepos _categoryRepository
-@inject IJSRuntime _jsRuntime
+@inject IJSRuntime _JS
 @* @using Tangy_Common *@
 @* @attribute [Authorize(Roles = SD.Role_Admin)] *@
 
@@ -51,7 +51,7 @@
             else
             {
                 //no records
-                <p>No recrods found.</p>
+                <p>No records found.</p>
             }
         }
     </div>
@@ -75,18 +75,15 @@
     {
         IsLoading=true;
         StateHasChanged();
-        Categories = _categoryRepository.GetAll();
+        Categories = await _categoryRepository.GetAll();
         IsLoading=false;
         StateHasChanged();
     }
 
     private void HandleDelete(int id)
     {
-        DeleteCategoryId=id;
-        _categoryRepository.Delete(DeleteCategoryId);
-        LoadCategories();
-        IsLoading = false;
-        _jsRuntime.InvokeVoidAsync("ShowDeleteConfirmationModal");
+        DeleteCategoryId = id;
+        _JS.InvokeVoidAsync("ShowDeleteConfirmationModal");
     }
 
     public async Task ConfirmDelete_Click(bool isConfirmed)
@@ -94,10 +91,9 @@
         IsLoading=true;
         if( isConfirmed && DeleteCategoryId != 0)
         {
-            //delete
-            _categoryRepository.Delete(DeleteCategoryId);
+            await _categoryRepository.Delete(DeleteCategoryId);
             await LoadCategories();
-            await _jsRuntime.InvokeVoidAsync("HideDeleteConfirmationModal");
+            await _JS.InvokeVoidAsync("HideDeleteConfirmationModal");
         }
         IsLoading=false;
     }

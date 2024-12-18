@@ -1,43 +1,81 @@
-﻿@page "/category/create"
-@page "/category/edit/{id:int}"
+﻿@page "/product/create"
+@page "/product/edit/{id:int}"
 @using Tangy_DataAccess.Data
-@inject ICategoryRepos _categoryRepository
+@inject IProductRepos _productRepos
+@inject ICategoryRepos _categoryRepos
+
 @inject NavigationManager _navigationManager
 @inject IJSRuntime _JS
 
-@if (IsProcessing)
-{
-    <div class="position-absolute w-75 h-75 d-flex flex-column align-items-center bg-white justify-content-center">
-        <img src="/images/loading.gif" alt="loading" />
-    </div>
-}
-else
-{
-    <div class="card border-0 mt-4">
-        <div class="col-6">
-            <h4 class="card-title text-primary">@(Id == 0 ? "Create" : "Update") Category</h4>
-        </div>
-        
-        <div class="card-body">
-            <EditForm Model="Category" FormName="CategoryUpsertForm" OnValidSubmit="UpsertCategory">
+<div class="row my-2">
+    <div class="col-md-10">
+        <h3 class="card-title text-primary mb-3 ml-3">@(Id == 0 ? "Create" : "Update") Product</h3>
+
+        @if (IsProcessing)
+        {
+            <div class="position-absolute w-75 h-75 d-flex flex-column align-items-center bg-white justify-content-center">
+                <img src="/images/loading.gif" alt="loading" />
+            </div>
+        }
+        else
+        {
+            <EditForm Model="Product" FormName="ProductUpsertForm" OnValidSubmit="UpsertProduct">
                 <DataAnnotationsValidator />
 
-                <div class="border-0 p-1 mt-2">
-                    <div class="form-floating py-3 col-12">
-                        <InputText @bind-Value="Category.Name" class="form-control" id="Name" placeholder="Name" />
+                <div class="border-0">
+                    <div class="form-floating py-1">
+                        <InputText @bind-Value="Product.Name" class="form-control" id="Name" placeholder="Name" />
                         <label for="Name">Name</label>
-                        <ValidationMessage For="@(() => Category.Name)" />
+                        <ValidationMessage For="@(() => Product.Name)" />
+                    </div>
+                    <div class="form-floating py-1">
+                        <InputText @bind-Value="Product.Color" class="form-control" id="Color" placeholder="Color" />
+                        <label for="Color">Color</label>
+                        <ValidationMessage For="@(() => Product.Color)" />
+                    </div>
+                    <div class="form-floating py-1">
+                        <InputTextArea @bind-Value="Product.Description" class="form-control" id="Description" placeholder="Description" />
+                        <label for="Description">Description</label>
+                        <ValidationMessage For="@(() => Product.Description)" />
+                    </div>
+                    @* Form Group ------------------ *@
+                    <div class="row pt-3">
+                        <div class="form-group col-6">
+                            <div class="form-check">
+                                <InputCheckbox @bind-Value="@Product.ShopFavorites" class="form-check-input"></InputCheckbox>
+                                <label class="form-check-label">Shop Favorite</label>
+                            </div>
+                        </div>
+                        <div class="form-group col-6">
+                            <div class="form-check">
+                                <InputCheckbox @bind-Value="@Product.CustomerFavorites" class="form-check-input"></InputCheckbox>
+                                <label class="form-check-label">Customer Favorite</label>
+                            </div>
+                        </div>
+                            @* Category Select ------------------  *@
+                        <div class="form-group col-6">
+                            <label>Category</label>
+                            <InputSelect @bind-Value="@Product.CategoryId" class="form-select">
+                                <option value="0" disabled="disabled" selected>--Select Category</option>
+                                @foreach( var cat in Categories)
+                                {
+                                    <option value="@cat.Id">@cat.Name</option>
+                                }
+                            </InputSelect>
+                            <ValidationMessage For="@(() => Product.CategoryId)" />
+                            
+                        </div>
                     </div>
 
                     @* Buttons ------------------ *@
-                    <div class="d-flex">
+                    <div class="d-flex mt-3">
                         <div class="row">
-                            <div class="btn-group " role="group">
+                            <div class="btn-group" role="group">
                                 <button type="submit" class="btn btn-primary mx-1" disabled="@IsProcessing">
                                     <i class="bi bi-floppy2-fill"></i>
                                     @(Id == 0 ? "Create" : "Update")
                                 </button>
-                                <a href="category" class="btn btn-outline-primary mx-1" disabled="@IsProcessing">
+                                <a href="product" class="btn btn-outline-primary mx-1" disabled="@IsProcessing">
                                     <i class="bi bi-arrow-bar-left"></i> Back
                                 </a>
                             </div>
@@ -46,17 +84,21 @@ else
                 </div>
 
             </EditForm>
-
-        </div>
+        }
     </div>
-}
+</div>
 
 @code {
     [Parameter]
     public int Id { get; set; }
 
+    private IEnumerable<CategoryDTO> Categories { get; set; } = new List<CategoryDTO>();
+
     [SupplyParameterFromForm]
-    private CategoryDTO Category { get; set; } = new CategoryDTO();
+    private ProductDTO Product { get; set; } = new ProductDTO() 
+        { 
+            Category = new CategoryDTO { }  
+        };
 
     private bool IsProcessing { get; set; } = true;
 
@@ -64,35 +106,41 @@ else
     {
         if (firstRender)
         {
-            await LoadCategory();
+            await LoadProduct();
             IsProcessing = false;
             StateHasChanged();
         }
         //return base.OnAfterRenderAsync(firstRender);
     }
 
-    private async Task LoadCategory()
-    {
-        if (Id > 0)
-        {
-            Category = _categoryRepository.Get(Id);
-        }
-    }
-
-    private async Task UpsertCategory()
+    private async Task LoadProduct()
     {
         IsProcessing = true;
-        if (Category.Id == 0) //create
+        StateHasChanged();
+        Categories = await _categoryRepos.GetAll();
+        if (Id !=  0)
         {
-            _categoryRepository.Create(Category);
-            //await _JS.ToastrSuccess("Category Created Successfully");
+            Product = await _productRepos.Get(Id);
+
+        }
+        IsProcessing = false;
+        StateHasChanged();
+    }
+
+    private async Task UpsertProduct()
+    {
+        IsProcessing = true;
+        if (Product.Id == 0) //create
+        {
+            await _productRepos.Create(Product);
+            await _JS.ToastrSuccess("Product Created");
         }
         else //update
         {
-            _categoryRepository.Update(Category);
-            //await _JS.ToastrSuccess("Category Updated Successfully");
+            await _productRepos.Update(Product);
+            await _JS.ToastrSuccess("Product Updated");
         }
         IsProcessing = false;
-        _navigationManager.NavigateTo("category");
+        _navigationManager.NavigateTo("product");
     }
 }

@@ -1,6 +1,6 @@
 ﻿@page "/product"
-@inject IProductRepos _productRepository
-@inject IJSRuntime _jsRuntime
+@inject IProductRepos _productRepos
+@inject IJSRuntime _JS
 @* @using Tangy_Common *@
 @* @attribute [Authorize(Roles = SD.Role_Admin)] *@
 
@@ -59,7 +59,7 @@
             else
             {
                 //no records
-                <p>No recrods found.</p>
+                <p>No records found.</p>
             }
         }
     </div>
@@ -83,7 +83,7 @@
     {
         IsLoading=true;
         StateHasChanged();
-        Products = _productRepository.GetAll();
+        Products = await _productRepos.GetAll();
         IsLoading=false;
         StateHasChanged();
     }
@@ -91,10 +91,7 @@
     private void HandleDelete(int id)
     {
         DeleteProductId = id;
-        _productRepository.Delete(DeleteProductId);
-        LoadProducts();
-        IsLoading = false;
-        _jsRuntime.InvokeVoidAsync("ShowDeleteConfirmationModal");
+        _JS.InvokeVoidAsync("ShowDeleteConfirmationModal");
     }
 
     public async Task ConfirmDelete_Click(bool isConfirmed)
@@ -103,9 +100,9 @@
         if (isConfirmed && DeleteProductId != 0)
         {
             //delete
-            _productRepository.Delete(DeleteProductId);
+            await _productRepos.Delete(DeleteProductId);
             await LoadProducts();
-            await _jsRuntime.InvokeVoidAsync("HideDeleteConfirmationModal");
+            await _JS.InvokeVoidAsync("HideDeleteConfirmationModal");
         }
         IsLoading=false;
     }

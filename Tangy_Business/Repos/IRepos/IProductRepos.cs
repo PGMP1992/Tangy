@@ -4,10 +4,10 @@ namespace Tangy_Business.Repos.IRepos
 {
     public interface IProductRepos
     {
-        public ProductDTO Create(ProductDTO obj);
-        public ProductDTO Update(ProductDTO obj);
-        public int Delete(int id);
-        public ProductDTO Get(int id);
-        public IEnumerable<ProductDTO> GetAll();
+        public Task<ProductDTO> Create(ProductDTO obj);
+        public Task<ProductDTO> Update(ProductDTO obj);
+        public Task<int> Delete(int id);
+        public Task<ProductDTO> Get(int id);
+        public Task<IEnumerable<ProductDTO>> GetAll();
     }
 }
