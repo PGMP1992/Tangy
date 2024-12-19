@@ -1,6 +1,8 @@
 ﻿@page "/product"
 @inject IProductRepos _productRepos
 @inject IJSRuntime _JS
+@inject IFileUpload _fileUpload
+
 @* @using Tangy_Common *@
 @* @attribute [Authorize(Roles = SD.Role_Admin)] *@
 
@@ -17,7 +19,7 @@
         @if (Products.Any())
         {
             <table class="table table-hover">
-                 <thead>
+                <thead>
                     <tr>
                         <th>Name</th>
                         <th>Shop Favorites</th>
@@ -33,13 +35,14 @@
                             <td>@prod.Name</td>
                             <td>
                                 <input type="checkbox" disabled checked = "@prod.ShopFavorites" />
-                             </td>
+                            </td>
                             <td>
                                 <input type="checkbox" disabled checked="@prod.CustomerFavorites" />
                             </td>
                             <td>@prod.Category.Name</td>
                             <td>
                                 <NavLink href="@($"product/edit/{prod.Id}")" class="btn-primary btn">Edit</NavLink>
+                                <NavLink href="@($"product/price/{prod.Id}")" class="btn-success btn">Price</NavLink>
                                 <button class="btn btn-danger" @onclick="()=>HandleDelete(prod.Id)">Delete</button>
                             </td>
                         </tr>
@@ -53,8 +56,8 @@
             {
                 //loading gif
                 <div class="text-center">
-                <img src="/images/loading.gif">
-                    </div>
+                    <img src="/images/loading.gif">
+                </div>
             }
             else
             {
@@ -100,7 +103,13 @@
         if (isConfirmed && DeleteProductId != 0)
         {
             //delete
+            ProductDTO product = await _productRepos.Get(DeleteProductId);
+            if( product.ImageUrl.Contains("default.png"))
+            {
+                _fileUpload.DeleteFile(product.ImageUrl);              
+            }
             await _productRepos.Delete(DeleteProductId);
+            await _JS.ToastrSuccess("Product Deleted!");
             await LoadProducts();
             await _JS.InvokeVoidAsync("HideDeleteConfirmationModal");
         }

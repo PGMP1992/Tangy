@@ -1,9 +1,8 @@
 ﻿@page "/product/create"
 @page "/product/edit/{id:int}"
-@using Tangy_DataAccess.Data
 @inject IProductRepos _productRepos
 @inject ICategoryRepos _categoryRepos
-
+@inject IFileUpload _fileUpload
 @inject NavigationManager _navigationManager
 @inject IJSRuntime _JS
 
@@ -52,7 +51,7 @@
                                 <label class="form-check-label">Customer Favorite</label>
                             </div>
                         </div>
-                            @* Category Select ------------------  *@
+                        @* Category Select ------------------  *@
                         <div class="form-group col-6">
                             <label>Category</label>
                             <InputSelect @bind-Value="@Product.CategoryId" class="form-select">
@@ -63,7 +62,10 @@
                                 }
                             </InputSelect>
                             <ValidationMessage For="@(() => Product.CategoryId)" />
-                            
+                        </div>
+                        <div class="form-group col-6">
+                            <InputFile OnChange="HandleUpload">
+                            </InputFile>
                         </div>
                     </div>
 
@@ -86,6 +88,9 @@
             </EditForm>
         }
     </div>
+    <div class="col-md-2 pt-4">
+        <img src="@Product.ImageUrl" class="w-100" />
+    </div>
 </div>
 
 @code {
@@ -93,24 +98,21 @@
     public int Id { get; set; }
 
     private IEnumerable<CategoryDTO> Categories { get; set; } = new List<CategoryDTO>();
-
-    [SupplyParameterFromForm]
+    //[SupplyParameterFromForm]
     private ProductDTO Product { get; set; } = new ProductDTO() 
         { 
-            Category = new CategoryDTO { }  
+            ImageUrl = "/images/default.png"
         };
 
     private bool IsProcessing { get; set; } = true;
+    private string OldImageUrl { get; set; }  
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
             await LoadProduct();
-            IsProcessing = false;
-            StateHasChanged();
         }
-        //return base.OnAfterRenderAsync(firstRender);
     }
 
     private async Task LoadProduct()
@@ -121,7 +123,7 @@
         if (Id !=  0)
         {
             Product = await _productRepos.Get(Id);
-
+            OldImageUrl = Product.ImageUrl;
         }
         IsProcessing = false;
         StateHasChanged();
@@ -137,10 +139,45 @@
         }
         else //update
         {
+            if( OldImageUrl != Product.ImageUrl)
+            {
+                _fileUpload.DeleteFile(OldImageUrl);    
+            }
             await _productRepos.Update(Product);
             await _JS.ToastrSuccess("Product Updated");
         }
         IsProcessing = false;
         _navigationManager.NavigateTo("product");
+    }
+
+    private async Task HandleUpload(InputFileChangeEventArgs args )
+    {
+        IsProcessing = true;
+        try
+        {
+            if( args.GetMultipleFiles().Count> 0)
+            {
+                foreach ( var file in args.GetMultipleFiles())
+                {
+                    System.IO.FileInfo fileInfo = new System.IO.FileInfo(file.Name);
+                    if (fileInfo.Extension.ToLower() == ".jpg" ||
+                        fileInfo.Extension.ToLower() == ".png" ||
+                        fileInfo.Extension.ToLower() == ".jpeg")
+                    {
+                        Product.ImageUrl = await _fileUpload.UploadFile(file);
+                    } 
+                    else
+                    {
+                        await _JS.ToastrError("Please select .jpg/ .jpeg/ .png files only.");
+                        return;
+                    }
+                }
+            }
+            IsProcessing = false;
+        }
+        catch ( Exception e )
+        {
+            await _JS.ToastrError(e.Message);
+        }
     }
 }

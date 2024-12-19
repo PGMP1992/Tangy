@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Tangy_DataAccess\Tangy_DataAccess.csproj" />
+  </ItemGroup>
+
 </Project>

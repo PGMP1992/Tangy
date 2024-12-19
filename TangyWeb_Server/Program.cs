@@ -1,8 +1,12 @@
 using Microsoft.EntityFrameworkCore;
+using Radzen;
 using Tangy_Business.Repos;
 using Tangy_Business.Repos.IRepos;
 using Tangy_DataAccess.Data;
 using TangyWeb_Server.Components;
+using TangyWeb_Server.Service;
+using TangyWeb_Server.Service.IService;
+//using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,13 +15,17 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<ICategoryRepos, CategoryRepos>();
 builder.Services.AddScoped<IProductRepos, ProductRepos>();
+builder.Services.AddScoped<IProductPriceRepos, ProductPriceRepos>();
+builder.Services.AddScoped<IFileUpload, FileUpload>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddRadzenComponents();
+//builder.Services.AddMudServices();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

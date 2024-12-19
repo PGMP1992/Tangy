@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Tangy_DataAccess;
 
 namespace Tangy_Models
 {
@@ -25,8 +26,8 @@ namespace Tangy_Models
         [Range(1, int.MaxValue, ErrorMessage = "Please select a Category.")]
         public int CategoryId { get; set; }
 
-        public required CategoryDTO Category { get; set; }
+        public CategoryDTO Category { get; set; }
 
-        //public ICollection<ProductPrice> ProductPrices { get; set; }
+        public ICollection<ProductPrice> ProductPrices { get; set; }
     }
 }

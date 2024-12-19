@@ -23,7 +23,7 @@ namespace Tangy_Business.Repos
             var obj = _mapper.Map<ProductDTO, Product>(objDTO);
 
             var addedObj = _db.Products.Add(obj);
-            _db.SaveChangesAsync();
+            await _db.SaveChangesAsync();
 
             return _mapper.Map<Product, ProductDTO>(addedObj.Entity);
         }

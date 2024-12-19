@@ -1,12 +1,17 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
+    <RadzenComponents @rendermode="InteractiveServer" />
     <div class="sidebar">
         <NavMenu />
     </div>
 
     <main>
+        
         <div class="top-row px-4">
+            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.End" JustifyContent="JustifyContent.Center" Gap="2rem" Wrap="FlexWrap.Wrap" class="rz-p-12">
+                <RadzenAppearanceToggle />
+            </RadzenStack> 
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
         </div>
 
