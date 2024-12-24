@@ -49,10 +49,16 @@ namespace Tangy_Business.Repos
             return new ProductPriceDTO();
         }
 
-        public async Task<IEnumerable<ProductPriceDTO>> GetAll(int? id= null)
+        public async Task<IEnumerable<ProductPriceDTO>> GetAll(int? id = null)
         {
-            return _mapper.Map< IEnumerable<ProductPrice>, IEnumerable<ProductPriceDTO>>
-                (_db.ProductPrices.Where(u => u.ProductId == id));
+            if(id != null && id > 0)
+            {
+                return _mapper.Map<IEnumerable<ProductPrice>, IEnumerable<ProductPriceDTO>>
+                    (_db.ProductPrices.Where(u => u.ProductId == id));
+            } else {
+                return _mapper.Map<IEnumerable<ProductPrice>, IEnumerable<ProductPriceDTO>>
+                    (_db.ProductPrices);
+            }
         }
 
         public async Task<ProductPriceDTO> Update(ProductPriceDTO objDTO)

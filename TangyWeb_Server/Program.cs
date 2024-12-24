@@ -6,7 +6,6 @@ using Tangy_DataAccess.Data;
 using TangyWeb_Server.Components;
 using TangyWeb_Server.Service;
 using TangyWeb_Server.Service.IService;
-//using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +24,6 @@ builder.Services.AddScoped<IFileUpload, FileUpload>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddRadzenComponents();
-//builder.Services.AddMudServices();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
