@@ -4,8 +4,8 @@ using Tangy_Models;
 
 namespace TangyWeb_API.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("[controller]")]
     public class ProductController : ControllerBase
     {
         private readonly IProductRepos _productRepos;
@@ -32,7 +32,8 @@ namespace TangyWeb_API.Controllers
                     StatusCode = StatusCodes.Status400BadRequest
                 });
             }
-            var product = await _productRepos.Get(id.Value);
+            
+            var product = await _productRepos.Get(id.Value); // If Id would not be null it wouldn't need .Value
             if (product  == null)
             {
                 return BadRequest(new ErrorModelDTO()
@@ -40,7 +41,6 @@ namespace TangyWeb_API.Controllers
                     ErrorMessage = " Invalid Id",
                     StatusCode = StatusCodes.Status404NotFound
                 });
-
             }
             return Ok(product);
         }
