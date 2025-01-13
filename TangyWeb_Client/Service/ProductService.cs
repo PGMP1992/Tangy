@@ -1,17 +1,45 @@
-﻿using Tangy_Models;
+﻿using Newtonsoft.Json;
+using Tangy_Models;
 
 namespace TangyWeb_Client.Service
 {
     public class ProductService : IProductService
     {
-        public Task<ProductDTO> Get(int id)
+        private readonly HttpClient _httpClient;
+
+        public ProductService(HttpClient httpClient)
         {
-            throw new NotImplementedException();
+            _httpClient = httpClient;
         }
 
-        public Task<IEnumerable<ProductDTO>> GetAll()
+        public async Task<ProductDTO> Get(int id)
         {
-            throw new NotImplementedException();
+            var response = _httpClient.GetAsync($"/api/product/{id}");
+            var content = await response.Result.Content.ReadAsStringAsync();
+
+            if (response.IsCompletedSuccessfully)
+            {
+                var product = JsonConvert.DeserializeObject<ProductDTO>(content);
+                return product;
+            }
+            else
+            {
+                var errorModel = JsonConvert.DeserializeObject<ErrorModelDTO>(content);
+                throw new Exception(errorModel.ErrorMessage);
+            }
+        }
+
+        public async Task<IEnumerable<ProductDTO>> GetAll()
+        {
+            var response = _httpClient.GetAsync("/api/product");
+            if (response.IsCompletedSuccessfully)
+            {
+                var content = await response.Result.Content.ReadAsStringAsync();
+                var products = JsonConvert.DeserializeObject<IEnumerable<ProductDTO>>(content);
+                return products;
+            }
+            return new List<ProductDTO>();
+
         }
     }
 }

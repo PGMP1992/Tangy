@@ -1,6 +1,10 @@
+//CLient
 {
   "BaseAPIUrl": "https://localhost:44374",
   "BaseServerUrl": "https://localhost:44376"
+  //44376 = Server
+  //44328 = Client
+  //44374 API
 }
 
  
