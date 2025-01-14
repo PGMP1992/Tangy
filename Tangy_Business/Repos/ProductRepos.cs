@@ -44,14 +44,16 @@ namespace Tangy_Business.Repos
             var obj = await _db.Products
                 .Include(p=>p.Category)
                 .Include(p=>p.ProductPrices)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .FirstOrDefaultAsync(p => p.Id == id);
+
             if (obj != null)
             {
                 return _mapper.Map<Product, ProductDTO>(obj);
             }
-            return new ProductDTO() { 
-                Category = new CategoryDTO { }
-            };
+            
+            return new ProductDTO();// { 
+            //    Category = new CategoryDTO { }
+            //};
         }
 
         public async Task<IEnumerable<ProductDTO>> GetAll()
