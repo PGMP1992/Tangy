@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Tangy_Models;
+using TangyWeb_Client.Service.IService;
 
 namespace TangyWeb_Client.Service
 {
@@ -18,10 +19,10 @@ namespace TangyWeb_Client.Service
 
         public async Task<ProductDTO> Get(int id)
         {
-            var response = _httpClient.GetAsync($"/api/product/{id}");
-            var content = await response.Result.Content.ReadAsStringAsync();
+            var response = await _httpClient.GetAsync($"/api/product/{id}");
+            var content = await response.Content.ReadAsStringAsync();
 
-            if (response.IsCompletedSuccessfully)
+            if (response.IsSuccessStatusCode)
             {
                 var product = JsonConvert.DeserializeObject<ProductDTO>(content);
                 product.ImageUrl = BaseServerUrl + product.ImageUrl;

@@ -1,6 +1,6 @@
 ﻿using Tangy_Models;
 
-namespace TangyWeb_Client.Service
+namespace TangyWeb_Client.Service.IService
 {
     public interface IProductService
     {
