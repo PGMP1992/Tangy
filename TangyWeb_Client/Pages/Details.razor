@@ -2,6 +2,9 @@
 @using TangyWeb_Client.Service.IService
 @using TangyWeb_Client.ViewModels
 @inject IProductService _productService
+@inject ICartService _cartService
+@inject NavigationManager _navManager
+@inject IJSRuntime _JS
 
 @if (IsProcessing)
 {
@@ -34,7 +37,8 @@ else
                         <div class="col-10">
                             <p>@((MarkupString)Product.Description)</p>
                             <div class="row">
-                                @foreach( var prodPrice in Product.ProductPrices) { 
+                                @foreach( var prodPrice in Product.ProductPrices) 
+                                { 
                                     if (prodPrice.Id == DetailsVM.SelectedProdPriceId) // Selected Price
                                     {
                                         <div class="col-2 bg-light text-center pt-2 m-2" style="border:3px solid #28A745; border-radius:10px;box-shadow:5px">
@@ -70,7 +74,7 @@ else
 
                         </div>
                         <div class="col-2">
-                            <img src="@Product.ImageUrl" width="100%" class="rounded" />
+                            <img src="@Product.ImageUrl" class="rounded w-100" />
                         </div>
 
                     </div>
@@ -120,6 +124,15 @@ else
 
     private async Task AddToCart()
     {
-        
+        ShoppingCart cart = new()
+            {
+                Count = DetailsVM.Count,
+                ProductId = ProductId,
+                ProductPriceId = DetailsVM.SelectedProdPriceId
+            };
+
+            await _cartService.Increment(cart);
+            _navManager.NavigateTo("/");
+            await _JS.ToastrSuccess("Item Added to Cart");
     }
 }

@@ -2,7 +2,7 @@
 
 namespace TangyWeb_Client.ViewModels
 {
-    public class Cart
+    public class ShoppingCart
     {
         public int ProductId { get; set; }
         public ProductDTO Product { get; set; }

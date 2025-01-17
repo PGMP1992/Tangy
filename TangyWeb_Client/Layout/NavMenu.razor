@@ -1,16 +1,27 @@
-﻿<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+﻿@inject ISyncLocalStorageService _localStorage
+@inject ICartService _cartService
+@implements IDisposable
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">Tangy</a>
+        <a class="navbar-brand" href="/">Tangy</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-0 mb-lg-0">
-                <li class="nav-item p-0">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                @* <li class="nav-item p-0">
                     <NavLink class="nav-link active" aria-current="page" href="/">
                         <span class="p-2">Home</span>
+                    </NavLink>
+                </li> *@
+                <li class="nav-item p-0">
+                    <NavLink class="nav-link" href="/cart">
+                        <span class="p-0">
+                            <i class="bi bi-cart"></i>(@GetCartCount())
+                        </span>
                     </NavLink>
                 </li>
             </ul>
@@ -32,3 +43,22 @@
         </div>
     </div>
 </nav>
+
+@code{
+    protected override void OnInitialized()
+    {
+        _cartService.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        _cartService.OnChange -= StateHasChanged;
+    }
+
+    private int GetCartCount()
+    {
+        var cart = _localStorage.GetItem<List<ShoppingCart>>(SD.Cart);
+        return cart == null ? 0 : cart.Count;
+    }
+
+}
