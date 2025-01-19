@@ -2,10 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using Tangy_Business.Repos;
 using Tangy_Business.Repos.IRepos;
 using Tangy_DataAccess.Data;
+using TangyWeb_API.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 //builder.Services.AddEndpointsApiExplorer();
@@ -41,6 +42,12 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllers();
+//app.MapControllers();
+
+// Minimum API Below... moved inside /Endpoints/ProductEndpoints() 
+//app.MapGet("/api/products", async (AppDbContext context) =>
+//    await context.Products.ToListAsync());
+
+app.MapProductEndpoints(); // Extension for Product EndPoints => Endpoints Folder. 
 
 app.Run();

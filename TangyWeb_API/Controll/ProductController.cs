@@ -2,15 +2,14 @@
 using Tangy_Business.Repos.IRepos;
 using Tangy_Models;
 
-namespace TangyWeb_API.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductController : ControllerBase
+namespace TangyWeb_API.Controllers {
+    /*//[Route("api/[controller]")]
+    //[ApiController]
+    public class XProductController : ControllerBase
     {
         private readonly IProductRepos _productRepos;
 
-        public ProductController(IProductRepos productRepos)
+        public XProductController(IProductRepos productRepos)
         {
             _productRepos = productRepos;
         }
@@ -44,5 +43,5 @@ namespace TangyWeb_API.Controllers
             }
             return Ok(product);
         }
-    }
+    } */
 }

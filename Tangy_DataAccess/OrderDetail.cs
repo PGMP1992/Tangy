@@ -22,11 +22,11 @@ namespace Tangy_DataAccess
         
         [Required]
         public double Price { get; set; }
-        
+
         [Required]
-        public string Size { get; set; }
-        
+        public string Size { get; set; } = string.Empty;
+
         [Required]
-        public string ProductName { get; set; }
+        public string ProductName { get; set; } = string.Empty;
     }
 }

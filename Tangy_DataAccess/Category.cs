@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+//using Tangy_Models;
+
 
 namespace Tangy_DataAccess
 {
@@ -10,5 +12,14 @@ namespace Tangy_DataAccess
         public string Name { get; set; } = string.Empty;
 
         public DateTime CreatedDate { get; set; }
+
+        //public CategoryDTO MapToDto(Category category)
+        //{
+        //    return new CategoryDTO() 
+        //    {
+        //        Id = category.Id,
+        //        Name = category.Name
+        //    } 
+        //}
     }
 }
