@@ -58,14 +58,13 @@ namespace Tangy_Business.Repos
                 foreach( var details in obj.OrderDetails)
                 {
                     details.OrderHeaderId = obj.OrderHeader.Id;
-                    
                 }
 
                 _db.OrderDetails.AddRange(obj.OrderDetails);
                 await _db.SaveChangesAsync();
                 
                 return new OrderDTO()
-                                {
+                {
                     OrderHeader = _mapper.Map<OrderHeader, OrderHeaderDTO>(obj.OrderHeader),
                     OrderDetails = _mapper.Map<IEnumerable<OrderDetail>, IEnumerable<OrderDetailDTO>>(obj.OrderDetails).ToList()
                 };
@@ -90,7 +89,6 @@ namespace Tangy_Business.Repos
                 return _db.SaveChanges();
             }
             return 0;
-
         }
 
         public async Task<OrderDTO> Get(int id)
@@ -135,6 +133,7 @@ namespace Tangy_Business.Repos
             {
                 return new OrderHeaderDTO();
             }
+
             if (data.Status == SD.Status_Pending)
             {
                 data.Status = SD.Status_Confirmed;
@@ -149,6 +148,7 @@ namespace Tangy_Business.Repos
             if (objDTO != null)
             {
                 var orderHeaderFromDb = _db.OrderHeaders.FirstOrDefault(u => u.Id == objDTO.Id);
+                
                 orderHeaderFromDb.Name = objDTO.Name;
                 orderHeaderFromDb.PhoneNumber = objDTO.PhoneNumber;
                 orderHeaderFromDb.Carrier = objDTO.Carrier;
@@ -172,11 +172,13 @@ namespace Tangy_Business.Repos
             {
                 return false;
             }
+
             data.Status = status;
             if (status == SD.Status_Shipped)
             {
                 data.ShippingDate = DateTime.Now;
             }
+
             await _db.SaveChangesAsync();
             return true;
         }

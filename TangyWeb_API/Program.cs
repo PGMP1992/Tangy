@@ -42,12 +42,14 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-//app.MapControllers();
+app.MapControllers();
 
 // Minimum API Below... moved inside /Endpoints/ProductEndpoints() 
 //app.MapGet("/api/products", async (AppDbContext context) =>
 //    await context.Products.ToListAsync());
 
 app.MapProductEndpoints(); // Extension for Product EndPoints => Endpoints Folder. 
+//app.MapOrderEndpoints(); // Extension for OrderEndPoints => Endpoints Folder. 
 
 app.Run();
+

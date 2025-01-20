@@ -8,7 +8,6 @@ namespace Tangy_Models
 
         [Required]
         public string UserId { get; set; }
-        
 
         [Required]
         [Display(Name=" Order Total")]

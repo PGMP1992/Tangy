@@ -11,7 +11,6 @@ namespace Tangy_DataAccess
         // add navigation property : #TODO
 
         [Required]
-        [Display(Name=" Order Total")]
         public double OrderTotal { get; set; }
 
         [Required]
