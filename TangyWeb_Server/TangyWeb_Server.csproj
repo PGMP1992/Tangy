@@ -13,7 +13,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
-    <PackageReference Include="Radzen.Blazor" Version="5.7.8" />
+    <PackageReference Include="Radzen.Blazor" Version="5.7.9" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Controller\ProductController.cs" />
+    <None Include="Cont\ProductController.cs" />
   </ItemGroup>
 
   <ItemGroup>
