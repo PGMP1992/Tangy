@@ -21,6 +21,7 @@ builder.Services.AddScoped<ICategoryRepos, CategoryRepos>();
 builder.Services.AddScoped<IProductRepos, ProductRepos>();
 builder.Services.AddScoped<IProductPriceRepos, ProductPriceRepos>();
 builder.Services.AddScoped<IOrderRepos, OrderRepos>();
+
 // CORS 
 builder.Services.AddCors(o => o.AddPolicy("Tangy", builder =>
 {
