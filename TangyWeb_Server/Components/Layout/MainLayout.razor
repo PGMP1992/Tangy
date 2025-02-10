@@ -1,17 +1,20 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
-    <RadzenComponents @rendermode="InteractiveServer" />
+    @* <RadzenComponents @rendermode="InteractiveServer" /> *@
     <div class="sidebar">
         <NavMenu />
     </div>
 
     <main>
         <div class="top-row px-4">
-            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.End" JustifyContent="JustifyContent.Center" Gap="2rem" Wrap="FlexWrap.Wrap" class="rz-p-12">
+            <LoginDisplay />
+            @* <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.End" JustifyContent="JustifyContent.Center" Gap="2rem" Wrap="FlexWrap.Wrap" class="rz-p-12">
                 <RadzenAppearanceToggle />
-            </RadzenStack> 
+            </RadzenStack> *@
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
+        
 
         <article class="content px-4">
             @Body

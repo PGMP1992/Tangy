@@ -1,4 +1,7 @@
 ﻿@using TangyWeb_Server.Components.Account.Shared
+@using Microsoft.AspNetCore.Components.Authorization @* /*Added might be wrong ????? */ *@
+
+<CascadingAuthenticationState> @* /*Added might be wrong ????? */ *@
 <Router AppAssembly="typeof(Program).Assembly">
     <Found Context="routeData">
         <AuthorizeRouteView RouteData="routeData" DefaultLayout="typeof(Layout.MainLayout)">
@@ -9,3 +12,4 @@
         <FocusOnNavigate RouteData="routeData" Selector="h1" />
     </Found>
 </Router>
+</CascadingAuthenticationState>

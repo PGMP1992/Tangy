@@ -5,6 +5,7 @@
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
+@using Tangy_Common
 @using Tangy_DataAccess.Data
 
 @inject UserManager<IdentityUser> UserManager
@@ -14,6 +15,7 @@
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@* @inject RoleManager<IdentityRole> _roleManager *@
 
 <PageTitle>Register</PageTitle>
 
@@ -27,6 +29,11 @@
             <h2>Create a new account.</h2>
             <hr />
             <ValidationSummary class="text-danger" role="alert" />
+            <div class="form-floating mb-3">
+                <InputText @bind-Value="Input.Name" class="form-control" autocomplete="username" aria-required="true" placeholder="Name..." />
+                <label for="name">Name</label>
+                <ValidationMessage For="() => Input.Name" class="text-danger" />
+            </div>
             <div class="form-floating mb-3">
                 <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                 <label for="email">Email</label>
@@ -76,6 +83,12 @@
 
         if (!result.Succeeded)
         {
+            // Creating Roles ------------------- PM
+            // if (!await _roleManager.RoleExistsAsync(SD.Role_Admin))
+            // {
+            //     _roleManager.CreateAsync(new IdentityRole(SD.Role_Admin)).GetAwaiter().GetResult();
+            //     _roleManager.CreateAsync(new IdentityRole(SD.Role_Customer)).GetAwaiter().GetResult();
+            // }
             identityErrors = result.Errors;
             return;
         }
@@ -126,6 +139,10 @@
 
     private sealed class InputModel
     {
+        [Required]
+        [MaxLength(50)]
+        public string Name { get; set; } = "";
+        
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]

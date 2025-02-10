@@ -28,6 +28,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddRadzenComponents();
 
+// Added for Authentication - PM
 builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddScoped<IdentityUserAccessor>();
@@ -47,8 +48,10 @@ builder.Services.AddIdentityCore<IdentityUser>(options => options.SignIn.Require
     .AddEntityFrameworkStores<AppDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
+// End - > Added for Authentication - PM
 
 builder.Services.AddSingleton<IEmailSender<IdentityUser>, IdentityNoOpEmailSender>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -64,6 +67,8 @@ else
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication(); /*Added might be wrong ????? */
+app.UseAuthorization();  /*Added might be wrong ????? */
 app.UseAntiforgery();
 app.MapStaticAssets();
 app.MapRazorComponents<TangyWeb_Server.Components.App>()

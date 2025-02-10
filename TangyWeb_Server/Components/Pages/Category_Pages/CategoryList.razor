@@ -1,8 +1,9 @@
 ﻿@page "/category"
+@using Microsoft.AspNetCore.Authorization
 @inject ICategoryRepos _categoryRepository
 @inject IJSRuntime _JS
-@* @using Tangy_Common *@
-@* @attribute [Authorize(Roles = SD.Role_Admin)] *@
+@*@using Tangy_Common
+@attribute [Authorize(Roles = SD.Role_Admin)] *@
 
 <_DeleteConfirmation IsParentComponentProcessing="IsLoading" ConfirmationChanged="ConfirmDelete_Click"></_DeleteConfirmation>
 
